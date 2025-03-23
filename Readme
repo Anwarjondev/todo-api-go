@@ -1,0 +1,85 @@
+Todo List API
+
+A simple RESTful Todo List API built with Golang (net/http) and PostgreSQL.
+
+Features
+
+User authentication (JWT-based)
+
+CRUD operations for todos
+
+Role-based access control (admin/user)
+
+PostgreSQL database integration
+
+API documentation using Swagger
+
+Installation
+
+Prerequisites
+
+Go 1.19+
+
+PostgreSQL
+
+Clone the repository
+
+git clone <repository-url>
+cd todo-api
+
+Install dependencies
+
+go mod tidy
+
+Set up environment variables
+
+Create a .env file in the project root:
+
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=your_user
+DB_PASSWORD=your_password
+DB_NAME=your_database
+DB_SSLMODE=disable
+JWT_SECRET=your_secret_key
+
+Run the application
+
+go run main.go
+
+API Endpoints
+
+Authentication
+
+POST /auth/register - Register a new user
+
+POST /auth/login - Authenticate and receive a JWT token
+
+Todo Management (Requires Auth)
+
+GET /todos - List all todos
+
+POST /todos - Create a new todo
+
+GET /todos/{id} - Get a specific todo
+
+PUT /todos/{id} - Update a todo
+
+DELETE /todos/{id} - Delete a todo
+
+API Documentation
+
+Swagger documentation is available at:
+
+http://localhost:8080/swagger/index.html
+
+Folder Structure
+
+.
+├── db/                 # Database connection logic
+├── handlers/           # API handlers
+├── middleware/         # Authentication and authorization middleware
+├── models/             # Database models
+├── routes/             # API routes
+├── main.go             # Entry point of the application
+└── go.mod              # Go module dependencies

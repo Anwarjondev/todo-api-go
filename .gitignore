@@ -1,0 +1,24 @@
+# Environment Variables
+.env
+
+# Database Files
+*.db
+*.sqlite
+
+# Compiled Binaries
+*.exe
+*.out
+*.o
+
+# Go Modules
+go.sum
+vendor/
+
+# OS-Specific Files
+.DS_Store
+Thumbs.db
+
+# IDE / Editor Configs
+.vscode/
+.idea/
+*.swp
