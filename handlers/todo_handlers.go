@@ -36,7 +36,6 @@ func GetTodos(w http.ResponseWriter, r *http.Request) {
 	var query string
 	var rows *sql.Rows
 	var err error
-	fmt.Println(roleValue)
 	completedParam := r.URL.Query().Get("completed")
 	if roleValue == "admin" {
 		query = "SELECT * FROM todos"
@@ -56,7 +55,6 @@ func GetTodos(w http.ResponseWriter, r *http.Request) {
 	}
 	if err != nil {
 		http.Error(w, "Database error", http.StatusInternalServerError)
-		fmt.Println(err)
 		return
 	}
 
@@ -66,7 +64,6 @@ func GetTodos(w http.ResponseWriter, r *http.Request) {
 		var todo models.Todo
 		if err := rows.Scan(&todo.ID, &todo.Title, &todo.Completed, &id); err != nil {
 			http.Error(w, "Error scanning row:", http.StatusInternalServerError)
-			fmt.Println(err)
 			return
 		}
 		todos = append(todos, todo)
@@ -111,7 +108,6 @@ func CreateTodo(w http.ResponseWriter, r *http.Request) {
 	_, err = stmt.Exec(todo.Title, todo.Completed, userID)
 	if err != nil {
 		http.Error(w, "Error creating with todo", http.StatusInternalServerError)
-		fmt.Println(err)
 		return
 	}
 
@@ -136,7 +132,6 @@ func CreateTodo(w http.ResponseWriter, r *http.Request) {
 // @Router /todos/update [put]
 func UpdateTodo(w http.ResponseWriter, r *http.Request) {
 	userID, ok := r.Context().Value("user_id").(int)
-	fmt.Println(userID, ok)
 	if !ok {
 		http.Error(w, "Unauthorized: User ID not found", http.StatusUnauthorized)
 		return
@@ -170,7 +165,6 @@ func UpdateTodo(w http.ResponseWriter, r *http.Request) {
 	_, err = stmt.Exec(todo.Title, todo.Completed, id, userID)
 	if err != nil {
 		http.Error(w, "Error with updating todo", http.StatusInternalServerError)
-		fmt.Println(err)
 		return
 	}
 	w.WriteHeader(http.StatusOK)
@@ -203,7 +197,6 @@ func DeleteTodo(w http.ResponseWriter, r *http.Request) {
 	err := db.DB.QueryRow("Select Exists(select 1 from todos where id = $1 and user_id = $2)", id, userID).Scan(&exists)
 	if err != nil || !exists {
 		http.Error(w, "Todo not found or you do not have access", http.StatusForbidden)
-		fmt.Println(err, "found")
 		return
 	}
 	stmt, err := db.DB.Prepare("Delete from todos where id = $1 and user_id = $2")
@@ -216,7 +209,6 @@ func DeleteTodo(w http.ResponseWriter, r *http.Request) {
 	_, err = stmt.Exec(id, userID)
 	if err != nil {
 		http.Error(w, "Error with deleting todo", http.StatusInternalServerError)
-		fmt.Println(err, "delete")
 		return
 	}
 	w.WriteHeader(http.StatusNoContent)
