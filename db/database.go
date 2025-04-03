@@ -53,7 +53,4 @@ func InitDB() {
 	if err != nil {
 		log.Fatal("Failed to create table", err)
 	}
-	
-	
-	
 }

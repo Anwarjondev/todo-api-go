@@ -3,7 +3,6 @@ package handlers
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"os"
 	"time"
@@ -15,7 +14,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-var jwtkey  []byte
+var jwtkey []byte
 
 func init() {
 	err := godotenv.Load()
@@ -62,7 +61,6 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	_, err = db.DB.Exec("Insert into users(username, password, role) values($1, $2, $3)", user.Username, string(hashedPassword), user.Role)
 	if err != nil {
 		http.Error(w, "Username already taken", http.StatusBadRequest)
-		fmt.Println(err)
 		return
 	}
 	w.WriteHeader(http.StatusCreated)
@@ -107,7 +105,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	expritionTime := time.Now().Add(30 * time.Minute)
 	claims := &Claims{
 		UserId: userId,
-		Role: userRole,
+		Role:   userRole,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expritionTime),
 		},

@@ -11,6 +11,11 @@ definitions:
       user_id:
         type: integer
     type: object
+  models.TodoModel:
+    properties:
+      title:
+        type: string
+    type: object
   models.User:
     properties:
       id:
@@ -176,7 +181,12 @@ paths:
         name: todo
         required: true
         schema:
-          $ref: '#/definitions/models.Todo'
+          $ref: '#/definitions/models.TodoModel'
+      - description: User id
+        in: query
+        name: id
+        required: true
+        type: integer
       produces:
       - application/json
       responses:

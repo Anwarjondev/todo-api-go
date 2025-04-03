@@ -6,4 +6,7 @@ type Todo struct {
 	Completed bool   `json:"completed"`
 	UserId    int    `json:"user_id"`
 }
-	
+
+type TodoModel struct {
+	Title string `json:"title"`
+}

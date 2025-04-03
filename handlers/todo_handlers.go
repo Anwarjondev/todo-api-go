@@ -3,7 +3,6 @@ package handlers
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/Anwarjondev/todo-api-go/db"
@@ -47,7 +46,7 @@ func GetTodos(w http.ResponseWriter, r *http.Request) {
 	} else if completedParam == "false" {
 		query += "and completed = false"
 		rows, err = db.DB.Query(query, id)
-	} 
+	}
 	if roleValue == "admin" {
 		rows, err = db.DB.Query(query)
 	} else {
@@ -71,6 +70,7 @@ func GetTodos(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(todos)
 }
+
 // CreateTodo creates a new todo
 // @Summary Create Todo
 // @Description Create a new todo (only authenticated users)
@@ -78,7 +78,7 @@ func GetTodos(w http.ResponseWriter, r *http.Request) {
 // @Security BearerAuth
 // @Accept json
 // @Produce json
-// @Param todo body models.Todo true "Todo data"
+// @Param todo body models.TodoModel true "Todo data"
 // @Success 201 {object} models.Todo
 // @Failure 400 {string} string "Invalid request"
 // @Failure 401 {string} string "Unauthorized"
@@ -87,7 +87,7 @@ func GetTodos(w http.ResponseWriter, r *http.Request) {
 func CreateTodo(w http.ResponseWriter, r *http.Request) {
 	userID := r.Context().Value("user_id").(int)
 
-	var todo models.Todo
+	var todo models.TodoModel
 	if err := json.NewDecoder(r.Body).Decode(&todo); err != nil {
 		http.Error(w, "Invalid request", http.StatusBadRequest)
 		return
@@ -98,14 +98,13 @@ func CreateTodo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	stmt, err := db.DB.Prepare("insert into todos(title, completed, user_id) values($1,$2,$3)")
+	stmt, err := db.DB.Prepare("insert into todos(title,user_id) values($1, $2)")
 	if err != nil {
 		http.Error(w, "Database error", http.StatusInternalServerError)
 		return
 	}
 	defer stmt.Close()
-	fmt.Println(todo.Title, todo.Completed, todo.ID, todo.UserId)
-	_, err = stmt.Exec(todo.Title, todo.Completed, userID)
+	_, err = stmt.Exec(todo.Title, userID)
 	if err != nil {
 		http.Error(w, "Error creating with todo", http.StatusInternalServerError)
 		return
@@ -214,8 +213,6 @@ func DeleteTodo(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNoContent)
 }
 
-
-
 // DeleteAllTodos godoc
 // @Summary Delete Any Todo (Admin Only)
 // @Description Admin can delete any todo
@@ -244,5 +241,5 @@ func DeleteAllTodos(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(map[string]string{"message":"All todos successfuly deleted"})
+	json.NewEncoder(w).Encode(map[string]string{"message": "All todos successfuly deleted"})
 }
