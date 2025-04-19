@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os/user"
 
 	"github.com/Anwarjondev/todo-api-go/db"
 	"github.com/Anwarjondev/todo-api-go/models"
@@ -249,19 +248,19 @@ func DeleteAllTodos(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{"message": "All todos successfully deleted"})
 }
 
-	// Get all users
-	// @Summary Get all users (Admin Only)
-	// @Description Admin can get all users
-	// @Tags Admin
-	// @Security BearerAuth
-	// @Accept json
-	// @Produce json
-	// @Success 200 {string} string "Get Users"
-	// @Failure 400 {string} string "Invalid request"
-	// @Failure 401 {string} string "Unauthorized"
-	// @Failure 403 {string} string "Forbidden (Admins only)"
-	// @Failure 500 {string} string "Server error"
-	// @Router /admin/getallusers [get]
+// Get all users
+// @Summary Get all users (Admin Only)
+// @Description Admin can get all users
+// @Tags Admin
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Success 200 {string} string "Get Users"
+// @Failure 400 {string} string "Invalid request"
+// @Failure 401 {string} string "Unauthorized"
+// @Failure 403 {string} string "Forbidden (Admins only)"
+// @Failure 500 {string} string "Server error"
+// @Router /admin/getallusers [get]
 func GetAllUsers(w http.ResponseWriter, r *http.Request) {
 	role := r.Context().Value("role").(string)
 	if role != "admin" {
@@ -285,9 +284,9 @@ func GetAllUsers(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		user := models.AllUser{
-			ID: id,
+			ID:       id,
 			Username: username,
-			Role: role,
+			Role:     role,
 		}
 		users = append(users, user)
 	}
