@@ -10,3 +10,7 @@ type Todo struct {
 type TodoModel struct {
 	Title string `json:"title"`
 }
+type UpdateTodoModel struct {
+	Title string `json:"title"`
+	Completed bool `json:"completed"`
+}

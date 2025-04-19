@@ -23,6 +23,58 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/admin/getallusers": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Admin can get all users",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Get all users (Admin Only)",
+                "responses": {
+                    "200": {
+                        "description": "Get Users",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden (Admins only)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/admin/todos": {
             "delete": {
                 "security": [
@@ -86,11 +138,6 @@ const docTemplate = `{
         },
         "/login": {
             "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
                 "description": "Login user and receive JWT token",
                 "consumes": [
                     "application/json"
@@ -109,7 +156,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.User"
+                            "$ref": "#/definitions/models.UserModel"
                         }
                     }
                 ],
@@ -140,11 +187,6 @@ const docTemplate = `{
         },
         "/register": {
             "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
                 "description": "Register a new user (default role: user)",
                 "consumes": [
                     "application/json"
@@ -163,7 +205,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.User"
+                            "$ref": "#/definitions/models.UserModel"
                         }
                     }
                 ],
@@ -256,20 +298,13 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/models.TodoModel"
                         }
-                    },
-                    {
-                        "type": "integer",
-                        "description": "User id",
-                        "name": "id",
-                        "in": "query",
-                        "required": true
                     }
                 ],
                 "responses": {
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/models.Todo"
+                            "$ref": "#/definitions/models.TodoModel"
                         }
                     },
                     "400": {
@@ -379,7 +414,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Todo"
+                            "$ref": "#/definitions/models.UpdateTodoModel"
                         }
                     },
                     {
@@ -394,7 +429,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Todo"
+                            "$ref": "#/definitions/models.UpdateTodoModel"
                         }
                     },
                     "400": {
@@ -451,16 +486,21 @@ const docTemplate = `{
                 }
             }
         },
-        "models.User": {
+        "models.UpdateTodoModel": {
             "type": "object",
             "properties": {
-                "id": {
-                    "type": "integer"
+                "completed": {
+                    "type": "boolean"
                 },
-                "password": {
+                "title": {
                     "type": "string"
-                },
-                "role": {
+                }
+            }
+        },
+        "models.UserModel": {
+            "type": "object",
+            "properties": {
+                "password": {
                     "type": "string"
                 },
                 "username": {

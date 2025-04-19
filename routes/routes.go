@@ -19,6 +19,7 @@ func SetupRoutes(mux *http.ServeMux) {
 
 	adminmux := http.NewServeMux()
 	adminmux.HandleFunc("DELETE /admin/todos", handlers.DeleteAllTodos)
+	adminmux.HandleFunc("GET /admin/getallusers", handlers.GetAllUsers)
 
 	mux.Handle("/", middleware.AuthMiddleware(protectedMux))
 	mux.Handle("/admin/", middleware.AuthMiddleware(middleware.AdminMiddleware(adminmux)))

@@ -16,13 +16,16 @@ definitions:
       title:
         type: string
     type: object
-  models.User:
+  models.UpdateTodoModel:
     properties:
-      id:
-        type: integer
-      password:
+      completed:
+        type: boolean
+      title:
         type: string
-      role:
+    type: object
+  models.UserModel:
+    properties:
+      password:
         type: string
       username:
         type: string
@@ -40,6 +43,39 @@ info:
   title: Todo List API with Authentication
   version: "1.0"
 paths:
+  /admin/getallusers:
+    get:
+      consumes:
+      - application/json
+      description: Admin can get all users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Get Users
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "403":
+          description: Forbidden (Admins only)
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get all users (Admin Only)
+      tags:
+      - Admin
   /admin/todos:
     delete:
       consumes:
@@ -90,7 +126,7 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/models.User'
+          $ref: '#/definitions/models.UserModel'
       produces:
       - application/json
       responses:
@@ -108,8 +144,6 @@ paths:
           description: Invalid credentials
           schema:
             type: string
-      security:
-      - BearerAuth: []
       summary: User Login
       tags:
       - Authentication
@@ -124,7 +158,7 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/models.User'
+          $ref: '#/definitions/models.UserModel'
       produces:
       - application/json
       responses:
@@ -142,8 +176,6 @@ paths:
           description: Server error
           schema:
             type: string
-      security:
-      - BearerAuth: []
       summary: Register User
       tags:
       - Authentication
@@ -182,18 +214,13 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/models.TodoModel'
-      - description: User id
-        in: query
-        name: id
-        required: true
-        type: integer
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/models.Todo'
+            $ref: '#/definitions/models.TodoModel'
         "400":
           description: Invalid request
           schema:
@@ -262,7 +289,7 @@ paths:
         name: todo
         required: true
         schema:
-          $ref: '#/definitions/models.Todo'
+          $ref: '#/definitions/models.UpdateTodoModel'
       - description: Todo ID
         in: query
         name: id
@@ -274,7 +301,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Todo'
+            $ref: '#/definitions/models.UpdateTodoModel'
         "400":
           description: Invalid request
           schema:

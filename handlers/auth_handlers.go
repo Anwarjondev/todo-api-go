@@ -36,9 +36,8 @@ type Claims struct {
 // @Tags Authentication
 // @Accept json
 // @Produce json
-// @Param user body models.User true "User Registration Data"
+// @Param user body models.UserModel true "User Registration Data"
 // @Success 201 {object} map[string]string
-// @Security BearerAuth
 // @Failure 400 {string} string "Invalid request"
 // @Failure 500 {string} string "Server error"
 // @Router /register [post]
@@ -73,8 +72,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 // @Tags Authentication
 // @Accept json
 // @Produce json
-// @Security BearerAuth
-// @Param user body models.User true "User Credentials"
+// @Param user body models.UserModel true "User Credentials"
 // @Success 200 {object} map[string]string
 // @Failure 400 {string} string "Invalid request"
 // @Failure 401 {string} string "Invalid credentials"
