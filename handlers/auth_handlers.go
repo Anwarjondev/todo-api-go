@@ -3,6 +3,8 @@ package handlers
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"time"
@@ -17,10 +19,11 @@ import (
 var jwtkey []byte
 
 func init() {
-	err := godotenv.Load()
-	if err != nil {
-		panic("Error loading .env file")
+	if err := godotenv.Load(".env"); err != nil {
+		log.Println("Warning: .env file not found, falling back to OS env variables")
 	}
+
+	
 	jwtkey = []byte(os.Getenv("JWT_KEY"))
 }
 
