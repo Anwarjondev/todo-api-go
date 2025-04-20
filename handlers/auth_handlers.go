@@ -18,11 +18,9 @@ import (
 var jwtkey []byte
 
 func init() {
-	if err := godotenv.Load(".env"); err != nil {
-		log.Println("Warning: .env file not found, falling back to OS env variables")
+	if err := godotenv.Load(); err != nil {
+		log.Panic("Warning: .env file not found, falling back to OS env variables")
 	}
-
-	
 	jwtkey = []byte(os.Getenv("JWT_KEY"))
 }
 
