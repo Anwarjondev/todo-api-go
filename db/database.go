@@ -31,7 +31,6 @@ func InitDB() {
 	if err != nil {
 		log.Fatal("Failed to connect db", err)
 	}
-
 	createTableUsers := `CREATE TABLE IF NOT EXISTS users(
 		id SERIAL primary key,
 		username text unique not null, 
@@ -39,6 +38,7 @@ func InitDB() {
 		role text not null check(role in('admin', 'user'))
 	);`
 	_, err = DB.Exec(createTableUsers)
+	log.Println(err)
 	if err != nil {
 		log.Fatal("Failde to create users table", err)
 	}
@@ -50,6 +50,7 @@ func InitDB() {
 		FOREIGN KEY(user_id) REFERENCES users(id)
 	);`
 	_, err = DB.Exec(createTableQuery)
+	log.Println(err)
 	if err != nil {
 		log.Fatal("Failed to create table", err)
 	}
