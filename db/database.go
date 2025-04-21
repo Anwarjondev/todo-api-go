@@ -10,48 +10,73 @@ import (
 	_ "github.com/lib/pq"
 )
 
-
 var DB *sql.DB
 
-
 func InitDB() {
-	var err error
+	// Load .env only if not in Railway
 	if os.Getenv("RAILWAY_ENVIRONMENT") == "" {
-		// Only load .env locally
 		if err := godotenv.Load(); err != nil {
-			log.Println("Warning: .env file not found, relying on system env variables")
+			log.Println("Warning: .env file not found. Proceeding with system environment variables.")
 		}
-	}	
+	}
+
+	// Get environment variables
 	dbHost := os.Getenv("DB_HOST")
 	dbPort := os.Getenv("DB_PORT")
 	dbUser := os.Getenv("DB_USER")
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbName := os.Getenv("DB_NAME")
-	dbSsLMode := os.Getenv("DB_SSLMODE")
-	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s", dbHost, dbPort, dbUser, dbPassword, dbName, dbSsLMode)
+	dbSSLMode := os.Getenv("DB_SSLMODE")
+
+	// Check if any required env variable is empty
+	if dbHost == "" || dbPort == "" || dbUser == "" || dbPassword == "" || dbName == "" || dbSSLMode == "" {
+		log.Fatalf("Missing one or more required database environment variables")
+	}
+
+	// Build connection string
+	connStr := fmt.Sprintf(
+		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
+		dbHost, dbPort, dbUser, dbPassword, dbName, dbSSLMode,
+	)
+
+	log.Println("Connecting to DB with:", connStr) // for debugging, remove in production
+
+	// Open database connection
+	var err error
 	DB, err = sql.Open("postgres", connStr)
 	if err != nil {
-		log.Fatal("Failed to connect db", err)
+		log.Fatalf("Failed to open DB: %v", err)
 	}
-	createTableUsers := `CREATE TABLE IF NOT EXISTS users(
-		id SERIAL primary key,
-		username text unique not null, 
-		password text not null,
-		role text not null check(role in('admin', 'user'))
-	);`
-	_, err = DB.Exec(createTableUsers)
-	if err != nil {
-		log.Fatalf("Failed to create users table %v", err)
+
+	// Ping to ensure DB is reachable
+	if err = DB.Ping(); err != nil {
+		log.Fatalf("Failed to ping DB: %v", err)
 	}
-	createTableQuery := `CREATE TABLE IF NOT EXISTS todos(
+
+	// Create users table
+	createUsersTable := `
+	CREATE TABLE IF NOT EXISTS users(
 		id SERIAL PRIMARY KEY,
-		title text not null,
-		completed BOOLEAN not null default false,
-		user_id smallint not null,
+		username TEXT UNIQUE NOT NULL,
+		password TEXT NOT NULL,
+		role TEXT NOT NULL CHECK(role IN ('admin', 'user'))
+	);`
+	if _, err = DB.Exec(createUsersTable); err != nil {
+		log.Fatalf("Failed to create users table: %v", err)
+	}
+
+	// Create todos table
+	createTodosTable := `
+	CREATE TABLE IF NOT EXISTS todos(
+		id SERIAL PRIMARY KEY,
+		title TEXT NOT NULL,
+		completed BOOLEAN NOT NULL DEFAULT false,
+		user_id INTEGER NOT NULL,
 		FOREIGN KEY(user_id) REFERENCES users(id)
 	);`
-	_, err = DB.Exec(createTableQuery)
-	if err != nil {
-		log.Fatalf("Failed to create table %v", err)
+	if _, err = DB.Exec(createTodosTable); err != nil {
+		log.Fatalf("Failed to create todos table: %v", err)
 	}
+
+	log.Println("Database initialized successfully ✅")
 }
