@@ -21,15 +21,14 @@ func InitDB() {
 	}
 
 	// Get environment variables
-	dbHost := os.Getenv("PGHOST")
-	dbPort := os.Getenv("PGPORT")
-	dbUser := os.Getenv("PGUSER")
-	dbPassword := os.Getenv("PGPASSWORD")
-	dbName := os.Getenv("PGDATABASE")
-	dbSSLMode := os.Getenv("PGSSLMODE")
+	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbName := os.Getenv("DB_NAME")
+	dbSSLMode := os.Getenv("DB_SSLMODE")
 
 	// Check if any required env variable is empty
-	fmt.Println(dbHost, dbPort, dbUser, dbPassword, dbName, dbSSLMode)
 	if dbHost == "" || dbPort == "" || dbUser == "" || dbPassword == "" || dbName == "" || dbSSLMode == "" {
 		log.Fatalf("Missing one or more required database environment variables")
 	}
