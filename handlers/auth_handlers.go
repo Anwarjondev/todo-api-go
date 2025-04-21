@@ -18,8 +18,15 @@ import (
 var jwtkey []byte
 
 func init() {
-	if err := godotenv.Load(); err != nil {
-		log.Panic("Warning: .env file not found, falling back to OS env variables")
+	if os.Getenv("RAILWAY_ENVIRONMENT") == "" {
+		if err := godotenv.Load(); err != nil {
+			log.Println("Warning: .env file not found, relying on system env variables")
+		}
+	}
+
+	jwtKeyEnv := os.Getenv("JWT_KEY")
+	if jwtKeyEnv == "" {
+		log.Fatal("JWT_KEY environment variable is missing")
 	}
 	jwtkey = []byte(os.Getenv("JWT_KEY"))
 }

@@ -16,10 +16,12 @@ var DB *sql.DB
 
 func InitDB() {
 	var err error
-	err = godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+	if os.Getenv("RAILWAY_ENVIRONMENT") == "" {
+		// Only load .env locally
+		if err := godotenv.Load(); err != nil {
+			log.Println("Warning: .env file not found, relying on system env variables")
+		}
+	}	
 	dbHost := os.Getenv("DB_HOST")
 	dbPort := os.Getenv("DB_PORT")
 	dbUser := os.Getenv("DB_USER")
@@ -38,9 +40,8 @@ func InitDB() {
 		role text not null check(role in('admin', 'user'))
 	);`
 	_, err = DB.Exec(createTableUsers)
-	log.Println(err)
 	if err != nil {
-		log.Fatal("Failde to create users table", err)
+		log.Fatalf("Failed to create users table %v", err)
 	}
 	createTableQuery := `CREATE TABLE IF NOT EXISTS todos(
 		id SERIAL PRIMARY KEY,
@@ -50,8 +51,7 @@ func InitDB() {
 		FOREIGN KEY(user_id) REFERENCES users(id)
 	);`
 	_, err = DB.Exec(createTableQuery)
-	log.Println(err)
 	if err != nil {
-		log.Fatal("Failed to create table", err)
+		log.Fatalf("Failed to create table %v", err)
 	}
 }

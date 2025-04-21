@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	"log"
 	"net/http"
 	"os"
 	"strings"
@@ -14,9 +15,15 @@ import (
 var jwtkey []byte
 
 func init() {
-	err := godotenv.Load()
-	if err != nil {
-		panic("Error with loading .env file")
+	if os.Getenv("RAILWAY_ENVIRONMENT") == "" {
+		if err := godotenv.Load(); err != nil {
+			log.Println("Warning: .env file not found, relying on system env variables")
+		}
+	}
+
+	jwtKeyEnv := os.Getenv("JWT_KEY")
+	if jwtKeyEnv == "" {
+		log.Fatal("JWT_KEY environment variable is missing")
 	}
 	jwtkey = []byte(os.Getenv("JWT_KEY"))
 }
