@@ -48,11 +48,6 @@ func InitDB() {
 		log.Fatalf("Failed to open DB: %v", err)
 	}
 
-	// Ping to ensure DB is reachable
-	if err = DB.Ping(); err != nil {
-		log.Fatalf("Failed to ping DB: %v", err)
-	}
-
 	// Create users table
 	createUsersTable := `
 	CREATE TABLE IF NOT EXISTS users(
