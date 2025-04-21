@@ -39,8 +39,6 @@ func InitDB() {
 		dbHost, dbPort, dbUser, dbPassword, dbName, dbSSLMode,
 	)
 
-	log.Println("Connecting to DB with:", connStr) // for debugging, remove in production
-
 	// Open database connection
 	var err error
 	DB, err = sql.Open("postgres", connStr)
