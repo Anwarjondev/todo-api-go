@@ -29,6 +29,7 @@ func InitDB() {
 	dbSSLMode := os.Getenv("PGSSLMODE")
 
 	// Check if any required env variable is empty
+	fmt.Println(dbHost, dbPort, dbUser, dbPassword, dbName, dbSSLMode)
 	if dbHost == "" || dbPort == "" || dbUser == "" || dbPassword == "" || dbName == "" || dbSSLMode == "" {
 		log.Fatalf("Missing one or more required database environment variables")
 	}
