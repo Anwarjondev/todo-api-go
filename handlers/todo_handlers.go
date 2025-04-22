@@ -62,7 +62,7 @@ func GetTodos(w http.ResponseWriter, r *http.Request) {
 	var todos []models.Todo
 	for rows.Next() {
 		var todo models.Todo
-		if err := rows.Scan(&todo.ID, &todo.Title, &todo.Completed, &id); err != nil {
+		if err := rows.Scan(&todo.ID, &todo.Title, &todo.Completed, &todo.UserId); err != nil {
 			http.Error(w, "Error scanning row:", http.StatusInternalServerError)
 			return
 		}
