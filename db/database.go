@@ -70,6 +70,4 @@ func InitDB() {
 	if _, err = DB.Exec(createTodosTable); err != nil {
 		log.Fatalf("Failed to create todos table: %v", err)
 	}
-
-	log.Println("Database initialized successfully ✅")
 }

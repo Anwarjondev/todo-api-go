@@ -8,14 +8,14 @@
 package main
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/Anwarjondev/todo-api-go/db"
-	"github.com/Anwarjondev/todo-api-go/routes"
 	_ "github.com/Anwarjondev/todo-api-go/docs"
+	"github.com/Anwarjondev/todo-api-go/routes"
 	httpSwagger "github.com/swaggo/http-swagger"
 )
+
 // @title Todo List API with Authentication
 // @version 1.0
 // @description This is a simple API for managing todo lists with authentication.
@@ -29,15 +29,13 @@ import (
 // @securityDefinitions.apikey BearerAuth
 // @in header
 // @name Authorization
-func main(){
+func main() {
 
-	
 	db.InitDB()
 
 	mux := http.NewServeMux()
 	routes.SetupRoutes(mux)
 	mux.Handle("/swagger/", httpSwagger.WrapHandler)
 
-	log.Println("Server is running port :8080")
-	log.Fatal(http.ListenAndServe(":8080", mux))
+	http.ListenAndServe(":8080", mux)
 }
