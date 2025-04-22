@@ -23,4 +23,9 @@ func SetupRoutes(mux *http.ServeMux) {
 
 	mux.Handle("/", middleware.AuthMiddleware(protectedMux))
 	mux.Handle("/admin/", middleware.AuthMiddleware(middleware.AdminMiddleware(adminmux)))
+	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("🚀 Todo API is working! Visit /docs for Swagger or use Postman to test."))
+	})
+	mux.Handle("GET /docs/", http.StripPrefix("/docs/", http.FileServer(http.Dir("./swaggerui"))))
+	
 }
