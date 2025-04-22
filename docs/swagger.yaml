@@ -30,7 +30,7 @@ definitions:
       username:
         type: string
     type: object
-host: localhost:8080
+host: todo-api-go-production-0484.up.railway.app
 info:
   contact:
     email: support@example.com
@@ -323,8 +323,12 @@ paths:
       summary: Update Todo
       tags:
       - Todos
+schemes:
+- https
 securityDefinitions:
   BearerAuth:
+    description: 'JWT Authorization header using the Bearer scheme. Example: "Bearer
+      {token}"'
     in: header
     name: Authorization
     type: apiKey

@@ -1,4 +1,7 @@
 {
+    "schemes": [
+        "https"
+    ],
     "swagger": "2.0",
     "info": {
         "description": "This is a simple API for managing todo lists with authentication.",
@@ -14,7 +17,7 @@
         },
         "version": "1.0"
     },
-    "host": "localhost:8080",
+    "host": "todo-api-go-production-0484.up.railway.app",
     "basePath": "/",
     "paths": {
         "/admin/getallusers": {
@@ -505,6 +508,7 @@
     },
     "securityDefinitions": {
         "BearerAuth": {
+            "description": "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
             "type": "apiKey",
             "name": "Authorization",
             "in": "header"
