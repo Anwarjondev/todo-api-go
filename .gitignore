@@ -10,7 +10,7 @@
 *.o
 
 # Go Modules
-env
+.env
 vendor/
 
 # OS-Specific Files
